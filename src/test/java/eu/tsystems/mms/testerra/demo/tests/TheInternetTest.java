@@ -30,8 +30,6 @@ import eu.tsystems.mms.tic.testframework.report.FailureCorridor;
 import eu.tsystems.mms.tic.testframework.report.model.steps.TestStep;
 import eu.tsystems.mms.tic.testframework.testing.TesterraTest;
 import eu.tsystems.mms.tic.testframework.useragents.ChromeConfig;
-import eu.tsystems.mms.tic.testframework.utils.Timer;
-import eu.tsystems.mms.tic.testframework.utils.TimerUtils;
 import eu.tsystems.mms.tic.testframework.webdrivermanager.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -42,7 +40,6 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Sample Description goes here.
@@ -175,21 +172,6 @@ public class TheInternetTest extends TesterraTest {
 
         TestStep.begin("3. Assert user shown.");
         Assert.assertTrue(tablePage.isUserShown(userNonExisting));
-    }
-
-    @Test
-    public void testT05_Debug() {
-        TestStep.begin("1. Init driver");
-        final WebDriver driver = WebDriverManager.getWebDriver();
-        Timer timer = new Timer(TimeUnit.SECONDS.toMillis(1), TimeUnit.MINUTES.toMillis(5));
-        timer.executeSequence(new Timer.Sequence<Object>() {
-            @Override
-            public void run() throws Throwable {
-                StartPage startPage = PageFactory.create(StartPage.class, driver);
-                setSkipThrowingException(true);
-                driver.getWindowHandle();
-            }
-        });
     }
 
 }
