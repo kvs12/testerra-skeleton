@@ -23,6 +23,7 @@ import eu.tsystems.mms.testerra.demo.page.theinternet.DragAndDropPage;
 import eu.tsystems.mms.testerra.demo.page.theinternet.StartPage;
 import eu.tsystems.mms.testerra.demo.page.theinternet.TablePage;
 import eu.tsystems.mms.tic.testframework.annotations.Fails;
+import eu.tsystems.mms.tic.testframework.common.PropertyManager;
 import eu.tsystems.mms.tic.testframework.constants.Browsers;
 import eu.tsystems.mms.tic.testframework.pageobjects.factory.PageFactory;
 import eu.tsystems.mms.tic.testframework.report.FailureCorridor;
@@ -34,6 +35,7 @@ import eu.tsystems.mms.tic.testframework.utils.TimerUtils;
 import eu.tsystems.mms.tic.testframework.webdrivermanager.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
@@ -65,6 +67,24 @@ public class TheInternetTest extends TesterraTest {
                 options.addArguments("--disable-dev-shm-usage");
             }
         });
+    }
+
+    @BeforeSuite
+    public void setupProxy() {
+        org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
+        final String host = PropertyManager.getProperty("https.proxyHost");
+        final String port = PropertyManager.getProperty("https.proxyPort");
+        if (host == null || host.isEmpty() || port == null || port.isEmpty()) {
+            proxy.setProxyType(org.openqa.selenium.Proxy.ProxyType.DIRECT);
+            proxy.setAutodetect(false);
+        } else {
+            String proxyString = String.format("%s:%s",
+                    host,
+                    port);
+            proxy.setHttpProxy(proxyString).setSslProxy(proxyString);
+            System.out.println("Using browser proxy: " + proxyString);
+        }
+        WebDriverManager.setGlobalExtraCapability(CapabilityType.PROXY, proxy);
     }
 
     @Test
